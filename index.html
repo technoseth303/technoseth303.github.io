@@ -5,35 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Neon Dodge — technoseth303</title>
 
-  <!-- Optional (for install later): manifest + theme color -->
+  <!-- Correct links (NOT plain text) -->
+  style.css
   /manifest.json
   <meta name="theme-color" content="#2b6cff" />
-
-  style.css
 </head>
 
 <body>
   <div id="app">
-    <canvas id="c" aria-label="Neon Dodge game canvas"></canvas>
+    <canvas id="c"></canvas>
 
-    <!-- HUD -->
     <div id="hud">
-      <div class="pill">
-        <span class="label">Score</span>
-        <span id="score">0</span>
-      </div>
-
-      <div class="pill">
-        <span class="label">Best</span>
-        <span id="best">0</span>
-      </div>
-
-      <button id="pauseBtn" class="iconBtn" aria-label="Pause">
-        ⏸
-      </button>
+      <div class="pill"><span class="label">Score</span><span id="score">0</span></div>
+      <div class="pill"><span class="label">Best</span><span id="best">0</span></div>
+      <button id="pauseBtn" class="iconBtn">⏸</button>
     </div>
 
-    <!-- Start / Pause / Game Over overlays -->
     <div id="overlay" class="overlay show">
       <div class="panel">
         <h1>⚡ Neon Dodge</h1>
@@ -45,14 +32,8 @@
         </div>
 
         <div class="toggles">
-          <label class="toggle">
-            <input type="checkbox" id="soundToggle" checked>
-            <span>Sound</span>
-          </label>
-          <label class="toggle">
-            <input type="checkbox" id="hapticToggle" checked>
-            <span>Vibrate</span>
-          </label>
+          <label class="toggle"><input type="checkbox" id="soundToggle" checked> <span>Sound</span></label>
+          <label class="toggle"><input type="checkbox" id="hapticToggle" checked> <span>Vibrate</span></label>
         </div>
 
         <p class="tiny">Tip: Add to Home Screen later for a more “app-like” feel.</p>
@@ -85,12 +66,5 @@
   </div>
 
   game.js</script>
-
-  <!-- Optional offline support later: service worker -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(()=>{});
-    }
-  </script>
 </body>
 </html>
