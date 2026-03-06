@@ -2,47 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>technoseth303</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Neon Dodge — technoseth303</title>
 
-  <!-- PWA / install support -->
+  <!-- Optional (for install later): manifest + theme color -->
   /manifest.json
   <meta name="theme-color" content="#2b6cff" />
 
-  <style>
-    body { margin:0; font-family: system-ui, Arial, sans-serif; background:#0b1020; color:#e8eaf2; }
-    header { padding: 26px 16px; background:#111a33; }
-    main { max-width: 900px; margin: 0 auto; padding: 18px 16px; }
-    .card { background:#121a35; border:1px solid #23305e; border-radius:14px; padding:16px; margin: 12px 0; }
-    a { color:#8ab4ff; }
-    button { border:0; background:#2b6cff; color:#fff; padding:12px 14px; border-radius:12px; font-weight:700; }
-  </style>
+  style.css
 </head>
 
 <body>
-  <header>
-    <h1>👋 technoseth303</h1>
-    <p>This website is hosted with GitHub Pages.</p>
-  </header>
+  <div id="app">
+    <canvas id="c" aria-label="Neon Dodge game canvas"></canvas>
 
-  <main>
-    <div class="card">
-      <h2>About</h2>
-      <p>Edit this page from GitHub Mobile and it updates when you commit.</p>
+    <!-- HUD -->
+    <div id="hud">
+      <div class="pill">
+        <span class="label">Score</span>
+        <span id="score">0</span>
+      </div>
+
+      <div class="pill">
+        <span class="label">Best</span>
+        <span id="best">0</span>
+      </div>
+
+      <button id="pauseBtn" class="iconBtn" aria-label="Pause">
+        ⏸
+      </button>
     </div>
 
-    <div class="card">
-      <h2>Quick demo</h2>
-      <button id="btn">Tap me</button>
-      <p id="out"></p>
-    </div>
-  </main>
+    <!-- Start / Pause / Game Over overlays -->
+    <div id="overlay" class="overlay show">
+      <div class="panel">
+        <h1>⚡ Neon Dodge</h1>
+        <p class="sub">One-thumb survival. Drag anywhere to move. Dodge red. Grab gold.</p>
 
+        <div class="grid2">
+          <button id="playBtn" class="btn primary">Play</button>
+          <button id="howBtn" class="btn">How to play</button>
+        </div>
+
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="soundToggle" checked>
+            <span>Sound</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="hapticToggle" checked>
+            <span>Vibrate</span>
+          </label>
+        </div>
+
+        <p class="tiny">Tip: Add to Home Screen later for a more “app-like” feel.</p>
+      </div>
+    </div>
+
+    <div id="how" class="overlay">
+      <div class="panel">
+        <h2>How to play</h2>
+        <ul>
+          <li><b>Drag</b> your thumb anywhere to move the blue orb.</li>
+          <li><b>Dodge</b> red hazards.</li>
+          <li><b>Collect</b> gold coins for bonus points.</li>
+          <li>Survive longer → game speeds up.</li>
+        </ul>
+        <button id="backBtn" class="btn primary">Back</button>
+      </div>
+    </div>
+
+    <div id="gameover" class="overlay">
+      <div class="panel">
+        <h2>Game Over</h2>
+        <p class="sub">Score: <b id="finalScore">0</b> — Best: <b id="finalBest">0</b></p>
+        <div class="grid2">
+          <button id="retryBtn" class="btn primary">Retry</button>
+          <button id="menuBtn" class="btn">Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  game.js</script>
+
+  <!-- Optional offline support later: service worker -->
   <script>
-    const out = document.getElementById("out");
-    document.getElementById("btn").addEventListener("click", () => {
-      out.textContent = "It worked! ✅";
-    });
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(()=>{});
+    }
   </script>
 </body>
 </html>
