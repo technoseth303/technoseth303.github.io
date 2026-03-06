@@ -1,4 +1,4 @@
-const CACHE = "neon-dodge-v1";
+const CACHE = "arena-breakers-v1";
 const ASSETS = [
   "/",
   "/index.html",
