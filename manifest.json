@@ -1,10 +1,10 @@
 {
-  "name": "TechnoSeth",
-  "short_name": "TechnoSeth",
+  "name": "Neon Dodge",
+  "short_name": "NeonDodge",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0b1020",
+  "background_color": "#050816",
   "theme_color": "#2b6cff",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
