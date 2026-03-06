@@ -3,78 +3,77 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Neon Dodge — technoseth303</title>
+  <title>Arena Breakers — technoseth303</title>
 
-  <!-- Correct: these are tags, not plain text -->
+  <!-- Correct links: these must be tags, not plain text -->
   /style.css
   /manifest.json
   <meta name="theme-color" content="#2b6cff" />
 </head>
 
 <body>
-  <div id="app">
-    <canvas id="c" aria-label="Neon Dodge canvas"></canvas>
+  <canvas id="c"></canvas>
 
-    <div id="hud">
-      <div class="pill"><span class="label">Score</span><span id="score">0</span></div>
-      <div class="pill"><span class="label">Best</span><span id="best">0</span></div>
-      <button id="pauseBtn" class="iconBtn" aria-label="Pause">⏸</button>
-    </div>
+  <!-- HUD -->
+  <div id="hud">
+    <div class="pill"><span class="k">Score</span><span id="score">0</span></div>
+    <div class="pill"><span class="k">Best</span><span id="best">0</span></div>
+    <button id="pause" class="iconBtn" aria-label="Pause">⏸</button>
+  </div>
 
-    <!-- Main menu -->
-    <div id="overlay" class="overlay show">
-      <div class="panel">
-        <h1>⚡ Neon Dodge</h1>
-        <p class="sub">One-thumb survival. Drag anywhere to move. Dodge red. Grab gold.</p>
+  <!-- Menu -->
+  <div id="menu" class="overlay show">
+    <div class="panel">
+      <h1>🚀 Arena Breakers</h1>
+      <p class="sub">Sci‑fi arena shooter. Left stick = move. Right stick = aim + fire.</p>
 
-        <div class="grid2">
-          <button id="playBtn" class="btn primary">Play</button>
-          <button id="howBtn" class="btn">How to play</button>
-        </div>
-
-        <div class="toggles">
-          <label class="toggle"><input type="checkbox" id="soundToggle" checked> <span>Sound</span></label>
-          <label class="toggle"><input type="checkbox" id="hapticToggle" checked> <span>Vibrate</span></label>
-        </div>
-
-        <p class="tiny">Tip: Later, you can “Install” it like an app using the manifest.</p>
+      <div class="grid2">
+        <button id="play" class="btn primary">Play</button>
+        <button id="howBtn" class="btn">How to play</button>
       </div>
-    </div>
 
-    <!-- How to play -->
-    <div id="how" class="overlay">
-      <div class="panel">
-        <h2>How to play</h2>
-        <ul>
-          <li><b>Drag</b> anywhere to move the blue orb.</li>
-          <li><b>Dodge</b> red hazards.</li>
-          <li><b>Collect</b> gold coins for bonus points.</li>
-          <li>Survive longer → game speeds up.</li>
-        </ul>
-        <button id="backBtn" class="btn primary">Back</button>
+      <div class="toggles">
+        <label class="toggle"><input id="sound" type="checkbox" checked><span>Sound</span></label>
+        <label class="toggle"><input id="vibe" type="checkbox" checked><span>Vibrate</span></label>
       </div>
-    </div>
 
-    <!-- Game over -->
-    <div id="gameover" class="overlay">
-      <div class="panel">
-        <h2>Game Over</h2>
-        <p class="sub">Score: <b id="finalScore">0</b> — Best: <b id="finalBest">0</b></p>
-        <div class="grid2">
-          <button id="retryBtn" class="btn primary">Retry</button>
-          <button id="menuBtn" class="btn">Menu</button>
-        </div>
+      <p class="tiny">Tip: After it’s polished, we can make it installable (PWA).</p>
+    </div>
+  </div>
+
+  <!-- How -->
+  <div id="how" class="overlay">
+    <div class="panel">
+      <h2>How to play</h2>
+      <ul>
+        <li><b>Left stick</b> moves your ship.</li>
+        <li><b>Right stick</b> aims — the ship auto-fires while you aim.</li>
+        <li>Destroy drones, collect energy, survive as long as possible.</li>
+      </ul>
+      <button id="back" class="btn primary">Back</button>
+    </div>
+  </div>
+
+  <!-- Game Over -->
+  <div id="over" class="overlay">
+    <div class="panel">
+      <h2>Game Over</h2>
+      <p class="sub">Score: <b id="finalScore">0</b> — Best: <b id="finalBest">0</b></p>
+      <div class="grid2">
+        <button id="retry" class="btn primary">Retry</button>
+        <button id="home" class="btn">Menu</button>
       </div>
     </div>
   </div>
 
   /game.js</script>
 
-  <!-- Offline support (service worker). Service workers enable caching/offline behavior. -->
+  <!-- Offline (optional) -->
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(()=>{});
     }
   </script>
 </body>
-</html>
+        </html>
+        
