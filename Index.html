@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>technoseth303</title>
+  <style>
+    body { margin:0; font-family: system-ui, Arial, sans-serif; background:#0b1020; color:#e8eaf2; }
+    header { padding: 26px 16px; background:#111a33; }
+    main { max-width: 900px; margin: 0 auto; padding: 18px 16px; }
+    .card { background:#121a35; border:1px solid #23305e; border-radius:14px; padding:16px; margin: 12px 0; }
+    a { color:#8ab4ff; }
+    button { border:0; background:#2b6cff; color:#fff; padding:12px 14px; border-radius:12px; font-weight:700; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>👋 technoseth303</h1>
+    <p>This website is hosted with GitHub Pages.</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>About</h2>
+      <p>Edit this page from GitHub Mobile and it updates when you commit.</p>
+    </div>
+
+    <div class="card">
+      <h2>Quick demo</h2>
+      <button id="btn">Tap me</button>
+      <p id="out"></p>
+    </div>
+  </main>
+
+  <script>
+    const out = document.getElementById("out");
+    document.getElementById("btn").addEventListener("click", () => {
+      out.textContent = "It worked! ✅";
+    });
+  </script>
+</body>
+</html>
