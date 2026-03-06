@@ -1,5 +1,4 @@
 (() => {
-  // ----- DOM -----
   const canvas = document.getElementById("c");
   const ctx = canvas.getContext("2d", { alpha: false });
 
@@ -22,7 +21,6 @@
   const soundToggle = document.getElementById("soundToggle");
   const hapticToggle = document.getElementById("hapticToggle");
 
-  // ----- Settings & storage -----
   const STORE_KEY = "neonDodgeBest";
   let best = Number(localStorage.getItem(STORE_KEY) || 0);
   bestEl.textContent = best;
@@ -32,7 +30,6 @@
     paused: false,
     over: false,
     t: 0,
-    dt: 0,
     last: 0,
     score: 0,
     shake: 0,
@@ -43,7 +40,7 @@
     haptic: true
   };
 
-  // ----- Audio (tiny synth beeps) -----
+  // tiny sound synth
   let audioCtx = null;
   function beep(freq = 440, dur = 0.06, type = "sine", gain = 0.03) {
     if (!state.sound) return;
@@ -66,13 +63,12 @@
     if (navigator.vibrate) navigator.vibrate(ms);
   }
 
-  // ----- Game objects -----
-  const player = { x: 0, y: 0, r: 14, vx: 0 };
+  // objects
+  const player = { x: 0, y: 0, r: 14 };
   let hazards = [];
   let coins = [];
   let particles = [];
 
-  // ----- Helpers -----
   const rand = (a, b) => a + Math.random() * (b - a);
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -81,9 +77,7 @@
     state.h = Math.floor(window.innerHeight * state.dpr);
     canvas.width = state.w;
     canvas.height = state.h;
-    ctx.imageSmoothingEnabled = true;
 
-    // Place player near bottom
     player.r = Math.round(14 * state.dpr);
     player.x = state.w * 0.5;
     player.y = state.h * 0.78;
@@ -91,50 +85,46 @@
   window.addEventListener("resize", resize, { passive: true });
   resize();
 
-  // ----- Input (one-thumb drag) -----
+  // input: drag anywhere
   let dragging = false;
   function pointerToX(e) {
     const rect = canvas.getBoundingClientRect();
-    const x = (("clientX" in e ? e.clientX : e.touches[0].clientX) - rect.left) / rect.width;
+    const cx = ("clientX" in e) ? e.clientX : e.touches[0].clientX;
+    const x = (cx - rect.left) / rect.width;
     return x * state.w;
   }
-  function onDown(e) { dragging = true; player.x = pointerToX(e); }
-  function onMove(e) { if (dragging) player.x = pointerToX(e); }
-  function onUp() { dragging = false; }
+  function onDown(e){ dragging = true; player.x = pointerToX(e); }
+  function onMove(e){ if (dragging) player.x = pointerToX(e); }
+  function onUp(){ dragging = false; }
 
   canvas.addEventListener("pointerdown", onDown);
   canvas.addEventListener("pointermove", onMove);
   window.addEventListener("pointerup", onUp);
 
-  // Prevent mobile scrolling / pull-to-refresh during gameplay
   document.addEventListener("touchmove", (e) => {
     if (state.running) e.preventDefault();
-  }, { passive: false });
+  }, { passive:false });
 
-  // ----- Spawning -----
+  // spawning
   function spawnHazard() {
     const size = rand(14, 26) * state.dpr;
     hazards.push({
       x: rand(size, state.w - size),
       y: -size,
       r: size,
-      vy: rand(220, 330) * state.dpr, // base fall speed
+      vy: rand(220, 330) * state.dpr,
       wobble: rand(-1, 1) * 0.6,
       rot: rand(0, Math.PI * 2)
     });
   }
   function spawnCoin() {
     const r = 10 * state.dpr;
-    coins.push({
-      x: rand(r, state.w - r),
-      y: -r,
-      r,
-      vy: rand(200, 260) * state.dpr
-    });
+    coins.push({ x: rand(r, state.w - r), y: -r, r, vy: rand(200, 260) * state.dpr });
   }
+
   function burst(x, y, color, n = 16, power = 1) {
-    for (let i = 0; i < n; i++) {
-      const a = rand(0, Math.PI * 2);
+    for (let i=0; i<n; i++) {
+      const a = rand(0, Math.PI*2);
       const sp = rand(120, 420) * state.dpr * power;
       particles.push({
         x, y,
@@ -148,20 +138,16 @@
     }
   }
 
-  // ----- Difficulty curve -----
   function difficulty() {
-    // smoothly ramps 0 → 1 → 2...
     return Math.min(3, state.score / 900);
   }
 
-  // ----- Collisions -----
   function hitCircle(ax, ay, ar, bx, by, br) {
     const dx = ax - bx, dy = ay - by;
     const rr = ar + br;
-    return (dx * dx + dy * dy) <= rr * rr;
+    return (dx*dx + dy*dy) <= rr*rr;
   }
 
-  // ----- Game flow -----
   function resetGame() {
     hazards = [];
     coins = [];
@@ -170,9 +156,9 @@
     state.t = 0;
     state.over = false;
     state.paused = false;
+    scoreEl.textContent = "0";
     player.x = state.w * 0.5;
     player.y = state.h * 0.78;
-    scoreEl.textContent = "0";
   }
 
   function startGame() {
@@ -191,7 +177,6 @@
     state.running = false;
     state.over = true;
 
-    // Save best
     if (state.score > best) {
       best = state.score;
       localStorage.setItem(STORE_KEY, String(best));
@@ -217,9 +202,7 @@
     }
   }
 
-  // ----- Drawing -----
   function clear() {
-    // subtle vignette-ish background
     ctx.fillStyle = "#071024";
     ctx.fillRect(0, 0, state.w, state.h);
   }
@@ -236,10 +219,8 @@
   }
 
   function drawHazard(h) {
-    // spiky-ish orb
     const spikes = 10;
-    const r1 = h.r;
-    const r2 = h.r * 0.62;
+    const r1 = h.r, r2 = h.r * 0.62;
     ctx.save();
     ctx.translate(h.x, h.y);
     ctx.rotate(h.rot);
@@ -247,10 +228,10 @@
     ctx.shadowColor = "#ff3b3b";
     ctx.shadowBlur = 20 * state.dpr;
     ctx.beginPath();
-    for (let i = 0; i < spikes * 2; i++) {
-      const a = (i / (spikes * 2)) * Math.PI * 2;
-      const rr = (i % 2 === 0) ? r1 : r2;
-      ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+    for (let i=0; i<spikes*2; i++){
+      const a = (i/(spikes*2)) * Math.PI*2;
+      const rr = (i%2===0) ? r1 : r2;
+      ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr);
     }
     ctx.closePath();
     ctx.fill();
@@ -267,7 +248,6 @@
     ctx.fill();
     ctx.restore();
 
-    // inner ring
     ctx.strokeStyle = "#fff2b0";
     ctx.lineWidth = 2 * state.dpr;
     ctx.beginPath();
@@ -287,25 +267,19 @@
     ctx.globalAlpha = 1;
   }
 
-  // ----- Update -----
   function update(dt) {
     state.t += dt;
-
-    // Clamp player to screen
     player.x = clamp(player.x, player.r, state.w - player.r);
 
-    // Spawn rates scale with difficulty
     const d = difficulty();
-    const hazardRate = 0.55 + d * 0.45; // hazards per second-ish
+    const hazardRate = 0.55 + d * 0.45;
     const coinRate = 0.22 + d * 0.08;
 
-    // probabilistic spawns
     if (Math.random() < hazardRate * dt) spawnHazard();
     if (Math.random() < coinRate * dt) spawnCoin();
 
     const speedBoost = 1 + d * 0.45;
 
-    // update hazards
     for (const h of hazards) {
       h.y += h.vy * dt * speedBoost;
       h.x += Math.sin((state.t * 0.8) + h.rot) * h.wobble * 30 * state.dpr * dt;
@@ -313,13 +287,9 @@
     }
     hazards = hazards.filter(h => h.y < state.h + h.r * 2);
 
-    // update coins
-    for (const c of coins) {
-      c.y += c.vy * dt * speedBoost;
-    }
+    for (const c of coins) c.y += c.vy * dt * speedBoost;
     coins = coins.filter(c => c.y < state.h + c.r * 2);
 
-    // particles
     for (const p of particles) {
       p.t += dt;
       p.x += p.vx * dt;
@@ -329,7 +299,6 @@
     }
     particles = particles.filter(p => p.t < p.life);
 
-    // collisions: hazards
     for (const h of hazards) {
       if (hitCircle(player.x, player.y, player.r * 0.92, h.x, h.y, h.r * 0.72)) {
         state.shake = 10 * state.dpr;
@@ -342,7 +311,6 @@
       }
     }
 
-    // collisions: coins
     for (let i = coins.length - 1; i >= 0; i--) {
       const c = coins[i];
       if (hitCircle(player.x, player.y, player.r, c.x, c.y, c.r)) {
@@ -354,18 +322,15 @@
       }
     }
 
-    // score increases with survival time
     state.score += Math.floor(60 * dt);
     scoreEl.textContent = state.score;
 
-    // tiny screen shake decay
     state.shake = Math.max(0, state.shake - 40 * state.dpr * dt);
   }
 
   function render() {
     clear();
 
-    // screen shake
     let ox = 0, oy = 0;
     if (state.shake > 0) {
       ox = rand(-state.shake, state.shake);
@@ -374,7 +339,7 @@
       ctx.translate(ox, oy);
     }
 
-    // neon grid lines (subtle)
+    // subtle grid
     ctx.strokeStyle = "rgba(63,120,255,0.08)";
     ctx.lineWidth = 1 * state.dpr;
     for (let y = 0; y < state.h; y += 90 * state.dpr) {
@@ -384,15 +349,11 @@
       ctx.stroke();
     }
 
-    // draw coins & hazards
     for (const c of coins) drawCoin(c);
     for (const h of hazards) drawHazard(h);
 
-    // player glow
     drawGlowCircle(player.x, player.y, player.r, "#2b6cff", "#2b6cff");
-    // player core
     drawGlowCircle(player.x, player.y, player.r * 0.52, "#cfe0ff", "#8ab4ff");
-
     drawParticles();
 
     if (state.shake > 0) ctx.restore();
@@ -402,27 +363,24 @@
     if (!state.running || state.paused) return;
     const dt = Math.min(0.033, (now - state.last) / 1000);
     state.last = now;
-
     update(dt);
     render();
     requestAnimationFrame(loop);
   }
 
-  // ----- UI wiring -----
-  playBtn.addEventListener("click", () => startGame());
+  playBtn.addEventListener("click", startGame);
   howBtn.addEventListener("click", () => { overlay.classList.remove("show"); how.classList.add("show"); });
   backBtn.addEventListener("click", () => { how.classList.remove("show"); overlay.classList.add("show"); });
-  retryBtn.addEventListener("click", () => startGame());
+  retryBtn.addEventListener("click", startGame);
   menuBtn.addEventListener("click", () => { gameover.classList.remove("show"); overlay.classList.add("show"); });
-  pauseBtn.addEventListener("click", () => togglePause());
+  pauseBtn.addEventListener("click", togglePause);
 
   soundToggle.addEventListener("change", () => { state.sound = soundToggle.checked; if (state.sound) beep(660, 0.03); });
   hapticToggle.addEventListener("change", () => { state.haptic = hapticToggle.checked; if (state.haptic) vibrate(20); });
 
-  // initialize toggles
   state.sound = soundToggle.checked;
   state.haptic = hapticToggle.checked;
 
-  // Show menu on load
   overlay.classList.add("show");
 })();
+  
